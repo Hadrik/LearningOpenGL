@@ -19,5 +19,10 @@ target_include_directories(glad PUBLIC
     ./glad/include
 )
 
-add_executable(${PROJECT_NAME} main.cpp)
+# Header files also need to be included for IDE
+add_executable(${PROJECT_NAME} main.cpp
+        Shader.cpp
+        Shader.h
+)
+
 target_link_libraries(${PROJECT_NAME} PUBLIC glfw glad)
