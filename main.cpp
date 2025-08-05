@@ -10,9 +10,17 @@ void framebuffer_size_callback(GLFWwindow* window, const int w, const int h) {
     glViewport(0, 0, w, h);
 }
 
+float shader_image_mix = 0.5f;
+
 void process_input(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+    }
+    if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) && shader_image_mix <= 0.999f) {
+        shader_image_mix += 0.001f;
+    }
+    if ((glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) && shader_image_mix >= 0.001f) {
+        shader_image_mix -= 0.001f;
     }
 }
 
@@ -101,6 +109,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.use();
+        shader.set("mixValue", shader_image_mix);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
