@@ -8,6 +8,7 @@
 #include <glad/glad.h>
 
 #include <string>
+#include <glm/glm.hpp>
 
 
 
@@ -21,6 +22,7 @@ public:
     void set(const std::string& name, bool value) const;
     void set(const std::string& name, int value) const;
     void set(const std::string& name, float value) const;
+    void set(const std::string& name, glm::mat4 value) const;
 
 private:
     unsigned int _id;

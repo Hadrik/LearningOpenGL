@@ -1,7 +1,9 @@
 ﻿#include <iostream>
-#include <valarray>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
 #include "stb_image.h"
@@ -57,11 +59,11 @@ int main() {
     const Shader shader("../VShader.vert", "../FShader.frag");
 
     float verts[] = {
-        // positions          // colors           // texture coords
-        0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-        0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-       -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-       -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
+        // positions         // texture coords
+        0.5f,  0.5f, 0.0f,   1.0f, 1.0f,   // top right
+        0.5f, -0.5f, 0.0f,   1.0f, 0.0f,   // bottom right
+       -0.5f, -0.5f, 0.0f,   0.0f, 0.0f,   // bottom left
+       -0.5f,  0.5f, 0.0f,   0.0f, 1.0f    // top left
    };
     unsigned int indicies[] = {
         0, 1, 3,
@@ -80,11 +82,9 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), &indicies, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void *>(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -101,6 +101,12 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.use();
+
+        glm::mat4 trans(1.0f);
+        trans = glm::translate(trans, {0.5f, -0.5f, 0.0f});
+        trans = glm::rotate(trans, static_cast<float>(glfwGetTime()), {0.0f, 0.0f, 1.0f});
+        shader.set("transform", trans);
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);

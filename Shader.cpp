@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const char *vertex_path, const char *fragment_path) {
     // Read files
@@ -96,4 +97,8 @@ void Shader::set(const std::string &name, const int value) const {
 
 void Shader::set(const std::string &name, const float value) const {
     glUniform1f(glGetUniformLocation(_id, name.c_str()), value);
+}
+
+void Shader::set(const std::string &name, glm::mat4 value) const {
+    glUniformMatrix4fv(glGetUniformLocation(_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
