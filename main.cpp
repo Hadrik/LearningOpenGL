@@ -145,10 +145,9 @@ int main() {
         shader.use();
 
         glm::mat4 view(1.0f);
-        view = glm::translate(view, {0.0f, 0.0f, -3.0f});
+        view = glm::translate(view, {static_cast<float>(std::sin(glfwGetTime()) / 2.0f), static_cast<float>(std::cos(glfwGetTime()) / 2.0f), -3.0f});
 
-        glm::mat4 projection(1.0f);
-        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
         shader.set("view", view);
         shader.set("projection", projection);
@@ -162,7 +161,10 @@ int main() {
         for (unsigned int i = 0; i < 10; i++) {
             glm::mat4 model(1.0f);
             model = glm::translate(model, cubePositions[i]);
-            const float angle = 20.0f * i;
+            float angle = 20.0f * i;
+            if (i % 3 == 0) {
+                angle = static_cast<float>(glfwGetTime()) * (i + 25.0f);
+            }
             model = glm::rotate(model, glm::radians(angle), {1.0f, 0.3f, 0.5f});
             shader.set("model", model);
 
